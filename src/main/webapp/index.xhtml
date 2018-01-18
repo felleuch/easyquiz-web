@@ -11,6 +11,24 @@
 
 
     <ui:define name="body">
+
+        <style type="text/css">
+            .btn-success {
+                border-radius: 6px 0px 0px 6px !important;
+                color: gainsboro;
+            }
+            .ui-accordion .ui-accordion-header.ui-state-active{
+                background-color: gainsboro;
+            }
+            .ui-accordion .ui-accordion-header{
+                color: crimson;
+            }
+        </style>
+
+        <f:facet name="last">
+            <h:outputStylesheet library="css" name="style.css" />
+        </f:facet>
+
         <p:dialog id="dlg" header="Question" widgetVar="dlg" modal="true" dynamic="true" >
             <h:form>
                 <p:panelGrid >
@@ -46,10 +64,16 @@
                     <f:facet name="header">
                         Banque de questions
                     </f:facet>
-                    <p:megaMenu orientation="vertical" style="width: 90%" resizable="false">
-                        <p:submenu label="Toutes les catégories"  />
+                    <p:panelMenu style="width:300px">
+                        <p:submenu label="Toutes les catégories"  >
+                            <p:menuitem value="Education"></p:menuitem>
+                            <p:menuitem value="Informatique"></p:menuitem>
+                            <p:menuitem value="Santé"></p:menuitem>
+                            <p:menuitem value="Politique"></p:menuitem>
+                            <p:menuitem value="Histoire"></p:menuitem>
+                        </p:submenu>
                         <p:submenu label="Commentaires des clients"   />
-                    </p:megaMenu>
+                    </p:panelMenu>
 
                 </p:layoutUnit>
 
@@ -60,19 +84,19 @@
 
 
 
-<p:accordionPanel>
+<p:accordionPanel activeIndex="0,1">
     <p:tab title="Titre et logos">
 
 
-                        <p:outputLabel >Titre</p:outputLabel>
-                        <p:inputText value=""></p:inputText>
+                        <p:outputLabel >Titre :</p:outputLabel>
+                        <p:inputText id="txtTitre" value=""  style="width: 800px"></p:inputText>
 
 
 
     </p:tab>
 
     <p:tab title="Questions">
-        <p:commandButton value="Ajouter question" type="button" onclick="PF('dlg').show();" />
+        <p:commandButton value="Ajouter question" styleClass="colorG" type="button" onclick="PF('dlg').show();" />
 
 
 
@@ -80,7 +104,7 @@
 
 
 </p:accordionPanel>
-
+<p:commandButton  styleClass="btn-success" value="Terminé" ></p:commandButton>
 
 
                 </p:layoutUnit>
