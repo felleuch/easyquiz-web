@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="template/ui.xhtml">
+    <ui:define name="body">
+
+
+
+            <br/>
+            <br/>
+<h:form id="shopForm" >
+    <p:panel id="panel" header="Create Shop" style="margin-bottom:10px;">
+    <p:messages id="messages" />
+
+    <h:panelGrid columns="3"  >
+
+                <h:outputLabel for="firstname" value="Firstname: *"  />
+                <p:inputText id="firstname" value="#{registrationUserBean.firstname}" required="true" validatorMessage="ce champ est obligatoire" ></p:inputText>
+                <p:message for="firstname" />
+
+                <h:outputLabel for="lastname" value="Lastname: *" />
+                <p:inputText id="lastname" value="#{registrationUserBean.lastname}" required="true" ></p:inputText>
+                <p:message for="lastname" />
+
+
+                <h:outputLabel for="email" value="Email: *" />
+                <p:inputText id="email" value="#{registrationUserBean.email}">
+                    <f:validateLength minimum="2" />
+                </p:inputText>
+                <p:message for="email" />
+
+
+                <h:outputLabel for="employeeNum" value="Employee num : *" />
+                <p:inputText id="employeeNum" value="#{registrationUserBean.employeeNum}" title="Employee number" tabindex="8"
+                             size="3" validatorMessage="Registration Open Only for Level 3.0 to 4.5">
+                    <f:validateDoubleRange minimum="3.0" maximum="4.5" for="employeeNum"/>
+                    <!--f:validateRegex pattern="[3-4]\.?[05]" for="ustaRankingId"/-->
+                </p:inputText>
+                <p:message for="employeeNum" />
+                 <f:facet name="footer">
+                    <h:commandButton id="button" value="Register" action="#{registrationUserBean.register}" icon="ui-icon-disk" />
+                </f:facet>
+            </h:panelGrid>
+</p:panel>
+        </h:form>
+
+
+    </ui:define>
+</ui:composition>
