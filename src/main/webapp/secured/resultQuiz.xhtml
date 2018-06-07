@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="../template/ui.xhtml">
+    <ui:define name="body">
+        <style type="text/css">
+            .btn-success {
+                border-radius: 6px 0px 0px 6px !important;
+                color: gainsboro;
+            }
+
+            .ui-accordion .ui-accordion-header.ui-state-active {
+                background-color: gainsboro;
+            }
+
+            .ui-accordion .ui-accordion-header {
+                color: crimson;
+            }
+        </style>
+        <f:facet name="last">
+            <h:outputStylesheet library="css" name="style.css"/>
+        </f:facet>
+        <div align="center">
+            <p:panel style="width:800px;min-height:600px;align-items: center;align-content: center;text-align: center;">
+                <f:facet name="header">
+                    <span style="color: navy;font-size: 40px;"><strong>Résultats</strong></span>
+                </f:facet>
+                <p:panel style="background-color: #faf2cc">
+                    <span style="color: navy;font-size: 40px;"><strong>Votre note est : </strong></span>
+                    <span style="color: #4cae4c;font-size: 40px;"><strong>
+                    <p:outputLabel value="#{examController.resultQuiz.note}"></p:outputLabel>/<p:outputLabel
+                            value="#{examController.resultQuiz.total}"></p:outputLabel>
+                    </strong></span>
+                </p:panel>
+
+
+                <c:forEach items="#{examController.currentTest.questions}" var="q" varStatus="loop">
+                    <p:panel header="Question #{loop.index+1}">
+                        <p:messages/>
+                        <p:panel style="background-color: mintcream;font-size: 25px">
+                            <h:panelGrid columns="1" columnClasses="label, value">
+                            <p:graphicImage rendered="#{q.imageUrl ne null }" library="upload" name="#{q.imageUrl}"  style="width: 500px;height: 300px" />
+
+                            <h:outputText value="#{q.text}"/>
+                            </h:panelGrid>
+                        </p:panel>
+                        <h:panelGrid columns="1" columnClasses="label, value">
+
+                            <c:forEach items="#{q.propositions}" var="pp" varStatus="loopProp">
+                                <p:panelGrid columns="3">
+
+                                    <h:graphicImage rendered="#{pp.boolReponseTemp}" name="images/ok.jpg"
+                                                    style="width: 50px;height: 50px"/>
+                                    <h:graphicImage rendered="#{not pp.boolReponseTemp}" name="images/ko.jpg"
+                                                    style="width: 50px;height: 50px"/>
+
+                                    <p:selectBooleanCheckbox rendered="#{q.typeQuestionId eq 3 or q.typeQuestionId eq 2}" value="#{pp.boolResponseValue}"/>
+
+                                    <p:outputLabel>#{pp.text}</p:outputLabel>
+                                </p:panelGrid>
+                            </c:forEach>
+                        </h:panelGrid>
+                    </p:panel>
+                </c:forEach>
+            </p:panel>
+        </div>
+    </ui:define>
+</ui:composition>
+
+
+

@@ -1,0 +1,250 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="../template/ui.xhtml">
+    <ui:define name="body">
+        <h:outputScript library="js" name="some.js" target="head"/>
+        <style type="text/css">
+            .btn-success {
+                border-radius: 6px 0px 0px 6px !important;
+                color: gainsboro;
+            }
+
+            .ui-accordion .ui-accordion-header.ui-state-active {
+                background-color: gainsboro;
+            }
+        </style>
+        <f:facet name="last">
+            <h:outputStylesheet library="css" name="style.css"/>
+        </f:facet>
+        <h:form id="formTestCreate" enctype="multipart/form-data">
+            <p:messages id="message">
+            </p:messages>
+            <p:dialog header="Recherche" widgetVar="dlg1" minHeight="40">
+                <p:ajax event="close" update="@all"/>
+                <p:selectBooleanCheckbox value="#{testCreationController.modeImageRecherche}"/>
+                <h:outputText value="Mode image "/>
+                <h:outputText value="Text :"/>
+                <p:inputText id="txtSearchQuestion" value="#{testCreationController.libelleRecherche}"
+                             size="50"></p:inputText>
+                <p:commandButton value="Rechercher" actionListener="#{testCreationController.searchQuestion}">
+                    <f:param name="modesearch" value="1"/>
+                </p:commandButton>
+                <p:dataTable id="resultSearchDataTableId" var="q"
+                             value="#{testCreationController.searchQuestionResultList}"
+                             rowKey="#{q.id}">
+                    <f:facet name="header">
+                        List de Quiz
+                    </f:facet>
+                    <p:column headerText="Id" width="20">
+                        <h:outputText value="#{q.id}"/>
+                    </p:column>
+                    <p:column headerText="Libellé">
+                        <h:outputText value="#{q.text}"/>
+                    </p:column>
+                    <p:column headerText="Date de création" width="100">
+                        <h:outputText value="#{q.dateCreation}">
+                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="" width="50">
+                        <p:commandButton value="Ajouter" update="formTestCreate" oncomplete="PF('dlg1').hide();"
+                                         action="#{testCreationController.addQuestion(q)}">
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            <p:dialog header="Nouvelle Question" widgetVar="dlg2" minHeight="40">
+                <p:ajax event="close" update="@all"/>
+                <p:panelGrid columns="2">
+
+                    <p:outputLabel value="Type de question :"/>
+                    <h:selectOneMenu id="newtypeQuestion" value="#{testCreationController.newQuestion.typeQuesionId}"
+                                     style="width:200px" >
+                        <f:selectItems value="#{testCreationController.allTypeQuestions}" var="c"
+                                       itemLabel="#{c.code}" itemValue="#{c.id}"/>
+                    </h:selectOneMenu>
+
+                    <p:outputLabel value="Domaine :"/>
+                    <h:selectOneMenu value="#{testCreationController.newQuestion.domaineId}" style="width:200px"  >
+                        <f:selectItems value="#{testCreationController.allDomaines}" var="c"
+                                       itemLabel="#{c.code}" itemValue="#{c.id}"/>
+                    </h:selectOneMenu>
+
+                    <p:outputLabel value="Sous domaine :"/>
+                    <h:selectOneMenu value="#{testCreationController.newQuestion.disiplineId}" style="width:200px" >
+                        <f:selectItems value="#{testCreationController.allSousDomaines}" var="c"
+                                       itemLabel="#{c.code}" itemValue="#{c.id}"/>
+                    </h:selectOneMenu>
+
+
+                    <p:outputLabel value="Mode"/>
+
+                    <p:selectBooleanCheckbox value="#{testCreationController.newQuestion.mode}"/>
+                    <p:outputLabel value="Nombre de propositions"/>
+
+                    <p:spinner value="#{testCreationController.newQuestion.nombreProp}" max="8" min="1" />
+
+
+                </p:panelGrid>
+                <div align="Center">
+                    <p:commandButton value="Valider" action="#{testCreationController.addNewQuestion}"/>
+                </div>
+            </p:dialog>
+            <p:layout style="min-width:600px;min-height:1000px;">
+                <p:layoutUnit position="west" resizable="false" size="30%">
+                    <f:facet name="header">
+                        Banque de questions
+                    </f:facet>
+                    <p:panelMenu style="width:300px">
+
+
+                        <c:forEach var="domain" items="#{testCreationController.allDomaines}">
+                            <p:submenu label="#{domain.code}">
+                                <c:forEach var="item" items="#{domain.disiplines}">
+                                    <p:menuitem value="#{item.code}" onclick="PF('dlg1').show();"></p:menuitem>
+                                </c:forEach>
+                            </p:submenu>
+                        </c:forEach>
+
+
+
+
+
+                    </p:panelMenu>
+                </p:layoutUnit>
+                <p:layoutUnit position="center" resizable="false">
+                    <h:panelGrid columns="5" cellspacing="10" cellpadding="10">
+                        <p:commandLink id="addQuestionButtonId"  onclick="PF('dlg2').show();">
+                            <h:graphicImage name="icon/add.png" style="width: 50px;height: 50px"/>
+                        </p:commandLink>
+                        <p:commandLink id="saveTestButtonId" ajax="false" update="message" process="@this"
+                                       action="#{testCreationController.saveTest}">
+                            <h:graphicImage name="icon/save.png" style="width: 50px;height: 50px"/>
+                        </p:commandLink>
+                        <h:link id="returnButtonId" outcome="/admin/dashboard.jsf">
+                            <h:graphicImage name="icon/return.png" style="width: 50px;height: 50px"/>
+                        </h:link>
+                        <p:commandLink id="duplicateTestButtonId" ajax="false" update="message" process="@this"
+                                       action="#{testCreationController.returnTest}">
+                            <h:graphicImage name="icon/duplicate.png" style="width: 50px;height: 50px"/>
+                        </p:commandLink>
+                        <p:commandLink id="printTestButtonId" ajax="false" update="message" process="@this"
+                                       action="#{testCreationController.returnTest}">
+                            <h:graphicImage name="icon/print.png" style="width: 50px;height: 50px"/>
+                        </p:commandLink>
+                        <p:tooltip id="toolTipGrow" for="addQuestionButtonId" value="Ajouter une question"      showEffect="blind" hideEffect="fade" position="left" />
+                        <p:tooltip id="toolTipGrow2" for="saveTestButtonId" value="Enregistrer le test"      showEffect="blind" hideEffect="fade" position="left"/>
+                        <p:tooltip id="toolTipGrow3" for="returnButtonId" value="Retour à la liste des tests"      showEffect="blind" hideEffect="fade" position="left"/>
+                        <p:tooltip id="toolTipGrow4" for="duplicateTestButtonId" value="Dupliquer le test"      showEffect="blind" hideEffect="fade" position="left"/>
+                        <p:tooltip id="toolTipGrow5" for="printTestButtonId" value="Imprimer le test"      showEffect="blind" hideEffect="fade" position="left"/>
+                    </h:panelGrid>
+                    <p:panel id="panelTestCreate">
+                        <f:facet name="header">
+                            <div> Création de Test</div>
+                        </f:facet>
+                        <p:panelGrid >
+                            <p:row>
+                                <p:column colspan="4">
+                                <p:outputLabel for="testname" value="Titre :"/>
+                                <p:inputText id="testname" name="testname" value="#{testCreationController.newTest.name}"
+                                             size="100"></p:inputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:outputLabel for="testname" value="Avec temp de réponse limité"/>
+                                    <p:selectBooleanCheckbox value="#{testCreationController.newTest.withTimer}"/>
+                                </p:column>
+                                <p:column colspan="2">
+                                    <p:outputLabel value="Categorie :"/>
+                                    <h:selectOneMenu value="#{testCreationController.selectedCategorieId}">
+                                        <f:selectItems value="#{testCreationController.allCategories}" var="c"
+                                                       itemLabel="#{c.code}" itemValue="#{c.id}"/>
+                                    </h:selectOneMenu>
+                                </p:column>
+
+                            </p:row>
+
+                        </p:panelGrid>
+                        <p:accordionPanel>
+                            <c:forEach items="#{testCreationController.currentQuestionsList}" var="var"
+                                       varStatus="loop">
+                                <p:tab title="Question #{loop.index+1}">
+                                    <p:panelGrid columns="2" style="width: 1000px">
+                                        <h:outputLabel for="textQuestion" value="Question :"/>
+                                        <p:inputText id="textQuestion" value="#{var.text}" size="100"/>
+                                    </p:panelGrid>
+                                    <p:panelGrid rendered="#{var.mode}" columns="2" style="width: 1000px">
+                                        <h:outputLabel for="fileIdResume" value="Image :"/>
+                                        <p:fileUpload id="fileIdResume" value="#{var.fileImage}" mode="simple"
+                                                      skinSimple="true" description="Resume"/>
+                                    </p:panelGrid>
+                                    <p:panel rendered="#{var.typeQuestionId eq 3}">
+                                        <c:forEach items="#{var.propositions}" var="pp" varStatus="loopProp">
+                                            <p:panelGrid columns="2">
+                                                <p:selectBooleanCheckbox value="#{pp.boolResponseValue}"/>
+                                                <p:inputText value="#{pp.text}"></p:inputText>
+                                            </p:panelGrid>
+                                        </c:forEach>
+                                    </p:panel>
+                                    <p:panel rendered="#{var.typeQuestionId eq 2}">
+                                        <p:selectOneRadio id="customRadio#{loop.index}"
+                                                          value="#{var.selectedRadioValue}" layout="custom">
+                                            <f:selectItems value="#{var.propositionList}" var="propSelect"
+                                                           itemLabel="#{propSelect}" itemValue="#{propSelect}">
+                                            </f:selectItems>
+                                        </p:selectOneRadio>
+                                        <h:panelGrid columns="2" cellpadding="5">
+                                            <c:forEach items="#{var.propositions}" var="pp" varStatus="loopProp">
+                                                <p:radioButton for="customRadio#{loop.index}"
+                                                               itemIndex="#{loopProp.index}"/>
+                                                <p:inputText value="#{pp.text}"/>
+                                            </c:forEach>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel rendered="#{var.typeQuestionId eq 1}">
+                                        <h:outputLabel value="Liste de choixs :"/>
+                                        <h:panelGrid columns="1" cellpadding="5">
+                                            <c:forEach items="#{var.propositionsChoises}" var="pp1"
+                                                       varStatus="loopProp1">
+                                                <p:inputText value="#{pp1.text}"/>
+                                            </c:forEach>
+                                        </h:panelGrid>
+                                        <h:outputLabel value="Liste de propositions :"/>
+                                        <h:panelGrid columns="1" cellpadding="5">
+                                            <c:forEach items="#{var.propositions}" var="pp2" varStatus="loopProp2">
+                                                <p:inputText value="#{pp2.text}" size="100"/>
+                                            </c:forEach>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                    <p:panel rendered="#{var.typeQuestionId eq 4}">
+                                        <c:forEach items="#{var.propositions}" var="pp" varStatus="loopProp">
+                                            <p:panelGrid columns="2">
+                                                <p:inputText value="#{pp.text}" size="100"></p:inputText>
+                                                <p:rating value="#{pp.responseValue}" stars="10" cancel="false"/>
+
+                                            </p:panelGrid>
+                                        </c:forEach>
+                                    </p:panel>
+                                    <p:commandButton value="Supprimer"
+                                                     actionListener="#{testCreationController.removeQuestion(loop.index)}"
+                                                     update="@all"/>
+                                </p:tab>
+                            </c:forEach>
+                        </p:accordionPanel>
+                    </p:panel>
+                </p:layoutUnit>
+                <p:layoutUnit position="est" resizable="false" size="30%">
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

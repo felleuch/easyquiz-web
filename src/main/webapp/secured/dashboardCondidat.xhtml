@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="../template/ui.xhtml">
+    <ui:define name="body">
+
+            <p:panel   style="min-width:600px;min-height:600px;align-items: center;align-content: center;text-align: center;">
+
+                <p:panelGrid columns="4" >
+                    <p:chart type="pie" model="#{chartController.pieModel1}" style="width:380px;height:300px" />
+                    <p:chart type="line" model="#{chartController.lineModel1}" style="width:680px;height:300px;"/>
+
+                </p:panelGrid>
+                <h:form>
+                    <p:dataTable  id="testListId" var="test" value="#{dashBoardController.allTests}" rowKey="#{test.id}" paginator="true" rows="10" rowsPerPageTemplate="5,10,15" lazy="true">
+                        <p:column headerText="Test" >
+                            <h:outputText value="#{test.test.name}"/>
+                        </p:column>
+                        <p:column headerText="Condidat" width="150">
+                            <h:outputText value="#{test.userName}"/>
+                        </p:column>
+                        <p:column  headerText="Note" width="50">
+                            <h:outputText  value="#{test.note} / #{test.nbTotalQuestions}"/>
+                        </p:column>
+                        <p:column headerText="Date " width="150">
+                            <h:outputText value="#{test.dateExam}">
+                                <f:convertDateTime pattern="dd/MM/yyyy"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column rendered="#{not test.passed}" headerText="" width="50">
+                            <h:commandLink rendered="#{not test.passed}" action="#{dashBoardController.lancerTest(test)}">
+                                <h:graphicImage name="icon/arrow.png" style="width: 50px;height: 50px"/>
+                                <f:ajax event="action" execute="@form" render="@form"/>
+                            </h:commandLink>
+                        </p:column>
+                        <p:column rendered="#{test.passed}" headerText="" width="50">
+                                <h:graphicImage rendered="#{test.passed}" name="images/passed.jpg" style="width: 50px;height: 50px"/>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:panel>
+
+    </ui:define>
+</ui:composition>

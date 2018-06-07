@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:sec="http://www.springframework.org/security/tags"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                template="../template/ui.xhtml">
+    <ui:define name="body">
+
+        <h:outputScript library="js" name="some.js" target="head"/>
+        <p:outputPanel autoUpdate="true" styleClass="bColor" style="width:100%;height:100%;background-color: cornsilk">
+            <p:panel
+                    style="min-width:600px;min-height:600px;align-items: center;align-content: center;text-align: center;">
+                <f:facet name="header">
+                    Gestion des utilisateurs
+                </f:facet>
+                <h:form>
+                    <p:messages id="message">
+                    </p:messages>
+                    <div align="center">
+                        <p:panelGrid columns="2">
+
+                            <p:outputLabel value="Nom"></p:outputLabel>
+                            <p:inputText value="#{userController.userModify.firstName}"/>
+                            <p:outputLabel value="Prénom"></p:outputLabel>
+                            <p:inputText value="#{userController.userModify.lastName}"/>
+                            <p:outputLabel value="Login"></p:outputLabel>
+                            <p:inputText value="#{userController.userModify.username}"/>
+                            <p:outputLabel value="Email"></p:outputLabel>
+                            <p:inputText value="#{userController.userModify.email}"/>
+                            <p:outputLabel value="Password"></p:outputLabel>
+                            <p:inputText value="#{userController.userModify.password}"/>
+                            <p:outputLabel value="Active"></p:outputLabel>
+
+                            <p:selectBooleanCheckbox value="#{userController.userModify.enabled}"/>
+
+                        </p:panelGrid>
+
+
+                    <p:panelGrid columns="2">
+                        <p:pickList id="roleList" value="#{userController.roles}" var="role"    itemValue="#{role}" itemLabel="#{role.name}"
+                                    filterMatchMode="contains" converter="roleConverter">
+                            <f:facet name="sourceCaption">Tout les roles</f:facet>
+                            <f:facet name="targetCaption">Roles affectés</f:facet>
+                            <p:column style="width:90%;">
+                                <h:outputText value="#{role.name}"/>
+                            </p:column>
+                        </p:pickList>
+                        <p:pickList id="testList" value="#{userController.tests}" var="test"       itemValue="#{test}" itemLabel="#{test.name}"     converter="testConverter">
+                            <f:facet name="sourceCaption">Tout les tests</f:facet>
+                            <f:facet name="targetCaption">Tests affectés</f:facet>
+                            <p:column style="width:90%;">
+                                <h:outputText value="#{test.name}"/>
+                            </p:column>
+                        </p:pickList>
+
+
+                </p:panelGrid>
+                        <p:commandButton value="Enregistrer" action="#{userController.updateUserModifed}"  />
+                        <p:commandButton value="Retour à la liste" action="#{userController.cancel}"  />
+                    </div>
+
+
+                </h:form>
+
+            </p:panel>
+        </p:outputPanel>
+
+    </ui:define>
+</ui:composition>

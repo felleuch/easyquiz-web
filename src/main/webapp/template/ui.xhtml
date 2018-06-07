@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<f:view locale="fr">
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <ui:insert name="header">
+            <title>EasyQuiz : Plateforme de génération de quiz</title>
+        </ui:insert>
+        <h:outputScript library="javax.faces" name="jsf.js" target="head"/>
+    </h:head>
+
+    <script type="text/javascript">
+            redirect = function() {
+                window.location.href = '/login.jsf';
+            }
+        </script>
+
+
+    <h:outputStylesheet library="css" name="style.css"/>
+
+    <h:body>
+        <h:form>
+
+        <p:megaMenu orientation="#{megaMenuView.orientation}" style="margin-top:20px">
+            <p:submenu label="Acceuil" icon="ui-icon-check">
+                <p:column>
+                    <p:submenu label="Présentation">
+                        <p:menuitem value="Nos produits" url="#" />
+                        <p:menuitem value="Easy Quiz" url="/secured/index.jsf" />
+                    </p:submenu>
+                </p:column>
+            </p:submenu>
+            <p:submenu label="Tableau de bord" icon="ui-icon-contact">
+                <p:column>
+                    <p:submenu label="Tous les tests" rendered="#{userDetailsServiceImpl.adminUser}" >
+                        <p:menuitem value="Liste" url="/admin/dashboard.jsf" />
+                    </p:submenu>
+
+                    <p:submenu label="Vos tests" rendered="#{not userDetailsServiceImpl.adminUser}" >
+                        <p:menuitem value="Liste" url="/secured/dashboardCondidat.jsf" />
+                    </p:submenu>
+
+
+                </p:column>
+            </p:submenu>
+            <p:submenu label="Parametres" icon="ui-icon-contact" rendered="#{userDetailsServiceImpl.adminUser}">
+                <p:column>
+                    <p:submenu label="Utilisateurs"  >
+                        <p:menuitem value="Gestion utilisateur" url="/admin/users.jsf" />
+                    </p:submenu>
+                </p:column>
+            </p:submenu>
+
+            <p:menuitem value="Quit" action="#{registrationController.logout}" process="@this" oncomplete="redirect()" icon="ui-icon-close" />
+        </p:megaMenu>
+
+        </h:form>
+
+        <p:panel style="background-color: cornsilk">
+            <h:graphicImage library="images" name="EasyQuiz.png" style="width: 80px;height: 80px"/><span
+                style="font-weight:bold; font-size:26px;color: cadetblue">EasyQuiz </span>
+        </p:panel>
+
+
+
+
+        <ui:insert name="body">
+        </ui:insert>
+        <ui:insert name="script">
+        </ui:insert>
+    </h:body>
+</f:view>
+</html>
